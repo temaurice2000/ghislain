@@ -1,0 +1,16 @@
+---
+- name: Find AMI. Sort descending to get the latest.
+  ec2_ami_info:
+    region: "{{ region }}"
+    owner : "{{ aws_owner_id }}"
+    filters:
+      name: "{{ base_ami_name }}"
+  register: AMI
+
+- name: Get latest AMI
+  set_fact:
+    ami_detail: >
+      {{ AMI.images | sort (attribute='creation_date') | last }}
+- name: Print ami to terminal
+  debug:
+    var: ami_detail.image_id

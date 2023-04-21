@@ -1,0 +1,15 @@
+---
+
+- name: Delete instance
+
+  ec2:
+    region: "{{ region }}"
+    instance_id: "{{ ec2.tagged_instance.0.id }}"
+    state: "absent"
+    vpc_id: "{{ ami_vpc }}"
+    vpc_subnet_id: "{{ ami_subnet }}"
+    wait: "yes"
+  register: r_delete_instance_info
+  tags:
+    - instance
+

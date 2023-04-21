@@ -1,0 +1,31 @@
+---
+
+#####################################################################################################################################
+#                                              BASE AMI PATCHING
+#####################################################################################################################################
+
+- hosts: localhost
+  remote_user: ansible_tower
+  gather_facts: yes
+  any_errors_fatal: true
+  environment:
+    ANSIBLE_HOST_KEY_CHECKING: False
+    AWS_SHARED_CREDENTIALS_FILE: "/.aws/credentials"
+    AWS_CONFIG_FILE: "/.aws/config"
+    PYTHONPATH: "/var/lib/python/"
+  
+  roles:
+    - { role: aws_createinstance_base, tags: base }
+  vars:
+    region: "us-gov-west-1"
+    aws_owner_id: "xxxxxxxxxxxxx"
+    base_ami_name: "yyyyyyyyy"
+    vpc_id: "vpc-xxxxxx"
+    inst_type: "zzzzzzz"
+    ami_subnet: "subnet-ttttt"
+    sec_grp: "sg-llllll"
+    base_inst_name: "patching_server_base"
+    base_new_ami: "yyyyyyyyy-base-ami"
+    aws_repo: "https://repos_name.git"
+    email: "e-mail.test@whoami.gov"
+

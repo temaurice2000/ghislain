@@ -1,0 +1,33 @@
+---
+
+- name: Use Latest AMI to create EC2 instance
+  debug:
+    msg: "Using AMI ID : {{ ami_detail.image_id }}"
+
+- name: Create instance
+  ec2:
+    region: "{{ region }}"
+    count_tag:
+      Name: "{{ base_inst_name}}"
+    exact_count: "1"
+    instance_tags:
+      Name: "{{ base_inst_name }}"
+    image: "{{ ami_detail.image_id }}"
+    instance_type: "{{ inst_type }}"
+    volumes:
+      - device_name: /dev/sda1
+        volume_type: gp2
+        volume_size: 8
+    vpc_id: "{{ ami_vpc }}"
+    vpc_subnet_id: "{{ ami_subnet }}"
+    wait: "yes"
+  register: ec2
+
+- name: wait for SSH to be ready
+  wait_for:
+    port: 22
+    host: "{{ ec2.tagged_instances.0.private_ip }}"
+
+- name: Get Instance ID
+  debug:
+    var: ec2.tagged_instances.0.private_ip
